@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Name;
 use DB;
+use \Exception;
+
 
 class NameController extends Controller
 {
@@ -15,9 +17,26 @@ class NameController extends Controller
      */
     public function index()
     {
-        $names = Name::all();
+
+        try{
+            $names = Name::all();
+        } catch(ModelNotFoundException $e) {
+
+
+            abort(404);
+
+        }catch(QueryException   $ex){
+            abort(404);
+        }catch(\Illuminate\Database\QueryException $ex){
+
+            abort(404);
+        }
+
+
+
         return view('welcome')->with('names',$names);
     }
+
 
     /**
      * Show the form for creating a new resource.
